@@ -1,0 +1,26 @@
+version: "3"
+services:
+  selenium:
+    # x86_64
+    # image: selenium/standalone-firefox:4.0.0-rc-3-prerelease-20211010
+    # Arm
+    image: seleniarm/standalone-firefox:4.0.0-beta-1-20210215
+    # ARMv7(armhf) not use 5900 port
+    # image: deinchristian/rpi-selenium-node-firefox
+    ports:
+      - 4444:4444
+      - 5900:5900 # Arm VNC Port
+      # - 7900:7900 # x86_64 Web VNC port
+    shm_size: '2gb'
+  app:
+    build: ./app
+    volumes:
+      - ./app:/app
+    environment:
+      SELENIUM_URL: http://selenium:4444
+      ID: ${account_id}
+      PASS: ${account_pass}
+      system: m1mac
+    depends_on:
+      - selenium
+    tty: true
